@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { motion, AnimatePresence } from 'framer-motion';
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -17,6 +18,11 @@ import AttendancePage from './pages/AttendancePage';
 import LeavesPage from './pages/LeavesPage';
 import PayrollPage from './pages/PayrollPage';
 import ProfilePage from './pages/ProfilePage';
+import AnnouncementsPage from './pages/AnnouncementsPage';
+import SettingsPage from './pages/SettingsPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ForbiddenPage from './pages/ForbiddenPage';
+import ServerErrorPage from './pages/ServerErrorPage';
 import Layout from './components/Layout';
 
 axios.defaults.baseURL = '/api';
@@ -41,17 +47,23 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route path="/login" element={<LoginPage onAuth={setUser} />} />
-      <Route path="/" element={<ProtectedRoute><Layout user={user} setUser={setUser}><DashboardPage user={user} /></Layout></ProtectedRoute>} />
-      <Route path="/employees" element={<ProtectedRoute><Layout user={user} setUser={setUser}><EmployeesPage /></Layout></ProtectedRoute>} />
-      <Route path="/departments" element={<ProtectedRoute><Layout user={user} setUser={setUser}><DepartmentsPage /></Layout></ProtectedRoute>} />
-      <Route path="/attendance" element={<ProtectedRoute><Layout user={user} setUser={setUser}><AttendancePage /></Layout></ProtectedRoute>} />
-      <Route path="/leaves" element={<ProtectedRoute><Layout user={user} setUser={setUser}><LeavesPage /></Layout></ProtectedRoute>} />
-      <Route path="/payroll" element={<ProtectedRoute><Layout user={user} setUser={setUser}><PayrollPage /></Layout></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><Layout user={user} setUser={setUser}><ProfilePage user={user} /></Layout></ProtectedRoute>} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <AnimatePresence mode="wait">
+      <Routes>
+        <Route path="/login" element={<LoginPage onAuth={setUser} />} />
+        <Route path="/forbidden" element={<ForbiddenPage />} />
+        <Route path="/server-error" element={<ServerErrorPage />} />
+        <Route path="/" element={<ProtectedRoute><Layout user={user} setUser={setUser}><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><DashboardPage user={user} /></motion.div></Layout></ProtectedRoute>} />
+        <Route path="/employees" element={<ProtectedRoute><Layout user={user} setUser={setUser}><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><EmployeesPage /></motion.div></Layout></ProtectedRoute>} />
+        <Route path="/departments" element={<ProtectedRoute><Layout user={user} setUser={setUser}><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><DepartmentsPage /></motion.div></Layout></ProtectedRoute>} />
+        <Route path="/attendance" element={<ProtectedRoute><Layout user={user} setUser={setUser}><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><AttendancePage /></motion.div></Layout></ProtectedRoute>} />
+        <Route path="/leaves" element={<ProtectedRoute><Layout user={user} setUser={setUser}><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><LeavesPage /></motion.div></Layout></ProtectedRoute>} />
+        <Route path="/payroll" element={<ProtectedRoute><Layout user={user} setUser={setUser}><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><PayrollPage /></motion.div></Layout></ProtectedRoute>} />
+        <Route path="/announcements" element={<ProtectedRoute><Layout user={user} setUser={setUser}><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><AnnouncementsPage /></motion.div></Layout></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><Layout user={user} setUser={setUser}><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><SettingsPage /></motion.div></Layout></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Layout user={user} setUser={setUser}><motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}><ProfilePage user={user} /></motion.div></Layout></ProtectedRoute>} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </AnimatePresence>
   );
 }
 
